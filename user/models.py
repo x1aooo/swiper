@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from django.utils.functional import cached_property
 
 # Create your models here.
 
@@ -16,23 +17,22 @@ class User(models.Model):
     sex = models.CharField(max_length=8,choices=SEX)
     avatar = models.CharField(max_length=256)
     location = models.CharField(max_length=32)
-    birth_year = models.IntegerField()
-    birth_month = models.IntegerField()
-    birth_day = models.IntegerField()
+    birth_year = models.IntegerField(default=2000)
+    birth_month = models.IntegerField(default=1)
+    birth_day = models.IntegerField(default=1)
 
-    @property
+    @cached_property
     def age(self):
         today = datetime.date.today()
         birth_date = datetime.date(self.birth_year,self.birth_month,self.birth_day)
         times = today - birth_date
-        return time.days // 365
+        return times.days // 365
     
     @property
     def profile(self):
         '''用户的配置项'''
-        if not hasattr(self,_profile):
-            _profile,_ = Profile.objects.get_or_create(id=self.id)
-            self._profile = _profile
+        if not hasattr(self,'_profile'):
+            self._profile,_ = Profile.objects.get_or_create(id=self.id)
         return self._profile
 
 
