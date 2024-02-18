@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.utils.functional import cached_property
+from lib.orm import ModelMixin
 
 # Create your models here.
 
@@ -35,8 +36,19 @@ class User(models.Model):
             self._profile,_ = Profile.objects.get_or_create(id=self.id)
         return self._profile
 
+    def to_dict(self):
+        return {
+            'id':self.id,
+            'nickname':self.nickname,
+            'phonenum':self.phonenum,
+            'sex':self.sex,
+            'avatar':self.avatar,
+            'location':self.location,
+            'age':self.age,
+        }
 
-class Profile(models.Model):
+
+class Profile(models.Model,ModelMixin):
     '''用户配置项'''
     
     SEX = (
@@ -55,3 +67,4 @@ class Profile(models.Model):
     vibration = models.BooleanField(default=True,verbose_name='是否开启震动')
     only_matche = models.BooleanField(default=True,verbose_name='不让为匹配的人看我的相册')
     auto_play = models.BooleanField(default=True,verbose_name='是否自动播放视频')
+
