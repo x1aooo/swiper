@@ -1,7 +1,11 @@
+import os
+
+from django.conf import settings
 from lib.http import rander_json
 from common import error
 from user.logic import send_verify_code,check_vcode
 from user.models import User
+from user.forms import ProfileForm
 
 
 # Create your views here.
@@ -35,7 +39,24 @@ def get_profile(request):
 
 def modify_profile(request):
     ''''修改个人资料'''
+    form = ProfileForm(request.GET)
+    if form.is_valid():
+        form.save()
+        return rander_json(None)
+    else:
+        return rander_json(form.error,error.PROFILE_ERROE)
 
+
+import logging
+log = logging.getLevelName('inf')
 
 def upload_avatar(request):
     ''''头像上传'''
+    
+
+    file = request.FILES.get('avatar')
+    if file:
+        save_upload_file(request.user,file)
+        return rander_json(None)
+    else:
+        return rander_json(None,error.FILE_NOT_FOUND)

@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.functional import cached_property
 from lib.orm import ModelMixin
 
+
 # Create your models here.
 
 class User(models.Model):
@@ -38,13 +39,13 @@ class User(models.Model):
 
     def to_dict(self):
         return {
-            'id':self.id,
-            'nickname':self.nickname,
             'phonenum':self.phonenum,
-            'sex':self.sex,
+            'id':self.id,
             'avatar':self.avatar,
-            'location':self.location,
+            'nickname':self.nickname,
             'age':self.age,
+            'sex':self.sex,
+            'location':self.location,
         }
 
 
